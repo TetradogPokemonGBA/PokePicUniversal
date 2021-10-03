@@ -32,6 +32,8 @@ namespace PokePic
             swImportOrExport.Label.TextAlignment = TextAlignment.Center;
             ImportOn = false;
         }
+        public MainWindow Main { get; set; }
+       
         public Pokemon Pokemon { get; set; }
         public int Pic { get; set; }
         public bool ImportOn
@@ -72,20 +74,20 @@ namespace PokePic
                 }
 
                 bmp = Pokemon.Sprites.Frontales.Sprites[picFront] + Pokemon.Sprites.PaletaNomal;
-                imgFrontNormal.Tag = bmp;
+                imgFrontNormal.Tag = Pokemon.Sprites.Frontales.Sprites[picFront];
                 imgFrontNormal.SetImage(bmp);
 
                 bmp = Pokemon.Sprites.Frontales.Sprites[picFront] + Pokemon.Sprites.PaletaShiny;
-                imgFrontShiny.Tag = bmp;
+                imgFrontShiny.Tag = Pokemon.Sprites.Frontales.Sprites[picFront];
                 imgFrontShiny.SetImage(bmp);
 
 
                 bmp = Pokemon.Sprites.Traseros.Sprites[picBack] + Pokemon.Sprites.PaletaNomal;
-                imgBackNormal.Tag = bmp;
+                imgBackNormal.Tag = Pokemon.Sprites.Traseros.Sprites[picBack];
                 imgBackNormal.SetImage(bmp);
 
                 bmp = Pokemon.Sprites.Traseros.Sprites[picBack] + Pokemon.Sprites.PaletaShiny;
-                imgBackShiny.Tag = bmp;
+                imgBackShiny.Tag = Pokemon.Sprites.Traseros.Sprites[picBack];
                 imgBackShiny.SetImage(bmp);
 
             }
@@ -102,21 +104,23 @@ namespace PokePic
         {
             OpenFileDialog opnFileDialog;
             SaveFileDialog saveFileDialog;
-            Bitmap bmp;
+
+            BloqueImagen blImg;
+
             int picFront;
             int picBack;
 
             if (!ImportOn)
             {
-                bmp = ((System.Windows.Controls.Image)sender).Tag as Bitmap;
-                if (!Equals(bmp, default))
+                blImg = ((System.Windows.Controls.Image)sender).Tag as BloqueImagen;
+                if (!Equals(blImg, default))
                 {
                     saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.DefaultExt = "png";
+                    saveFileDialog.DefaultExt = "bmp";
                     saveFileDialog.FileName = $"{Pokemon.Nombre}_{DateTime.UtcNow.Ticks} ";
                     if (saveFileDialog.ShowDialog().GetValueOrDefault())
                     {
-                        bmp.Save(saveFileDialog.FileName);
+                        blImg.ExportToBMP(saveFileDialog.FileName);
                     }
                 }
             }
@@ -148,29 +152,33 @@ namespace PokePic
                 }
                 if (opnFileDialog.ShowDialog().GetValueOrDefault())
                 {
-                    bmp = new Bitmap(opnFileDialog.FileName);
+                    blImg = new Bitmap(opnFileDialog.FileName).ToBloqueImagen();
+
                     //quiere actualizar el pic
                     if (ReferenceEquals(sender, imgBackShiny))
                     {
-                        //Pokemon.Sprites.Traseros.Sprites[picBack].DatosDescomprimidos.Bytes = BloqueImagen.GetDatosDescomprimidos(bmp);
-                        Pokemon.Sprites.PaletaShiny = new PaletaShiny() { Paleta = bmp.GetPaleta() };
+                        Pokemon.Sprites.Traseros.Sprites[picBack].DatosDescomprimidos.Bytes = blImg.DatosDescomprimidos.Bytes;
+                        Pokemon.Sprites.PaletaShiny = new PaletaShiny() { Paleta = blImg.Paletas[0] };
                     }
                     else if (ReferenceEquals(sender, imgBackNormal))
                     {
-                        //Pokemon.Sprites.Traseros.Sprites[picBack].DatosDescomprimidos.Bytes = BloqueImagen.GetDatosDescomprimidos(bmp);
-                        Pokemon.Sprites.PaletaNomal = new PaletaNormal() { Paleta = bmp.GetPaleta() };
+                        Pokemon.Sprites.Traseros.Sprites[picBack].DatosDescomprimidos.Bytes = blImg.DatosDescomprimidos.Bytes;
+                        Pokemon.Sprites.PaletaNomal = new PaletaNormal() { Paleta = blImg.Paletas[0] };
                     }
                     else if (ReferenceEquals(sender, imgFrontNormal))
                     {
-                        //Pokemon.Sprites.Frontales.Sprites[picBack].DatosDescomprimidos.Bytes = BloqueImagen.GetDatosDescomprimidos(bmp);
-                        Pokemon.Sprites.PaletaNomal = new PaletaNormal() { Paleta = bmp.GetPaleta() };
+                        Pokemon.Sprites.Frontales.Sprites[picFront].DatosDescomprimidos.Bytes = blImg.DatosDescomprimidos.Bytes;
+                        Pokemon.Sprites.PaletaNomal = new PaletaNormal() { Paleta = blImg.Paletas[0] };
                     }
                     else if (ReferenceEquals(sender, imgFrontShiny))
                     {
-                        //Pokemon.Sprites.Frontales.Sprites[picBack].DatosDescomprimidos.Bytes = BloqueImagen.GetDatosDescomprimidos(bmp);
-                        Pokemon.Sprites.PaletaShiny = new PaletaShiny() { Paleta =  bmp.GetPaleta() };
+                        Pokemon.Sprites.Frontales.Sprites[picFront].DatosDescomprimidos.Bytes = blImg.DatosDescomprimidos.Bytes;
+                        Pokemon.Sprites.PaletaShiny = new PaletaShiny() { Paleta = blImg.Paletas[0] };
                     }
                     Refresh();
+                    //save rom
+                    Sprites.Set(Main.Rom, Pokemon.OrdenGameFreak, Pokemon.Sprites);
+                    Main.Save();
                 }
             }
 

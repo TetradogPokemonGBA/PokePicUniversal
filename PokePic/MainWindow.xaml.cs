@@ -28,6 +28,7 @@ namespace PokePic
         {
           
             InitializeComponent();
+            visorPokemon.Main = this;
             Load(LastRom);
         }
         public RomGba Rom { get; set; }
@@ -42,6 +43,7 @@ namespace PokePic
                 Properties.Settings.Default.Save();
             }
         }
+        public void Save() => Rom.Data.Bytes.Save(LastRom);
 
         private void miCargarRom_Click(object sender, RoutedEventArgs e)
         {
