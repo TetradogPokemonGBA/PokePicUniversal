@@ -129,6 +129,7 @@ namespace PokePic
                 visorPokemon.Pic++;
                 visorPokemon.Refresh();
             }
+
         }
     }
 }

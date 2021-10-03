@@ -23,8 +23,11 @@
         <Image x:Name="imgFrontShiny" Grid.Column="1" MouseRightButtonUp="img_MouseRightButtonDown" MouseLeftButtonDown="UserControl_MouseLeftButtonDown"/>
         <Image x:Name="imgBackNormal" Grid.Row="1" MouseRightButtonUp="img_MouseRightButtonDown" MouseLeftButtonDown="UserControl_MouseLeftButtonDown"/>
         <Image x:Name="imgBackShiny" Grid.Row="1" Grid.Column="1" MouseRightButtonUp="img_MouseRightButtonDown" MouseLeftButtonDown="UserControl_MouseLeftButtonDown"/>
-        <Border Grid.Row="2" BorderThickness="3">
+        <Border Grid.Row="2"  Grid.Column="1"  BorderThickness="3">
             <wpf:SwitchButtonLabel x:Name="swImportOrExport" Changed="swImportOrExport_Changed"   />
+        </Border>
+        <Border Grid.Row="2">
+            <Label HorizontalAlignment="Center" Content="Haz clic izquierdo cambiar frame" />
         </Border>
     </Grid>
 </UserControl>

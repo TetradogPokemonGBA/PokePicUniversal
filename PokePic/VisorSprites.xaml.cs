@@ -99,8 +99,48 @@ namespace PokePic
             Refresh();
 
         }
+        public void ImportOrExport(Sprites.Sprite sprite,bool? isImport=default,int frame = -1)
+        {
+            System.Windows.Controls.Image blSelected;
+            bool importOn = ImportOn;
+            int frameAct = Pic;
 
-        private void img_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+            if(frame>0)
+                Pic = frame;
+            if(isImport.HasValue)
+                ImportOn = isImport.Value;
+
+            if (sprite.HasFlag(Sprites.Sprite.Shiny))
+            {
+                if (sprite.HasFlag(Sprites.Sprite.Frontal))
+                {
+                    blSelected = imgFrontShiny;
+                }
+                else
+                {
+                    blSelected = imgBackShiny;
+                }
+            }
+            else
+            {
+                if (sprite.HasFlag(Sprites.Sprite.Frontal))
+                {
+                    blSelected = imgFrontNormal;
+                }
+                else
+                {
+                    blSelected = imgBackNormal;
+                }
+            }
+
+            img_MouseRightButtonDown(blSelected);
+
+
+            ImportOn = importOn;
+            Pic = frameAct;
+        }
+
+        private void img_MouseRightButtonDown(object sender, MouseButtonEventArgs e=default)
         {
             OpenFileDialog opnFileDialog;
             SaveFileDialog saveFileDialog;
@@ -188,12 +228,12 @@ namespace PokePic
         {
             if (swImportOrExport.EstaOn)
             {
-                swImportOrExport.Label.Text = "Importar al hacer click derecho";
+                swImportOrExport.Label.Text = "Importar al hacer clic derecho";
                 swImportOrExport.BrushOn = System.Windows.Media.Brushes.Salmon;
             }
             else
             {
-                swImportOrExport.Label.Text = "Exportar al hacer click derecho";
+                swImportOrExport.Label.Text = "Exportar al hacer clic derecho";
                 swImportOrExport.BrushOn = System.Windows.Media.Brushes.GreenYellow;
             }
         }
