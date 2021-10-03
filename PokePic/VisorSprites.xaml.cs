@@ -177,7 +177,7 @@ namespace PokePic
                     }
                     Refresh();
                     //save rom
-                    Sprites.Set(Main.Rom, Pokemon.OrdenGameFreak, Pokemon.Sprites);
+                    Sprites.Set(Main.Rom, Pokemon);
                     Main.Save();
                 }
             }
